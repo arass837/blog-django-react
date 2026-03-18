@@ -1,0 +1,27 @@
+.appContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Nowa klasa układu */
+.layoutWrapper {
+    display: flex;
+    max-width: 1200px;
+    margin: 20px auto;
+    width: 100%;
+    gap: 30px; /* Odstęp między treścią a sidebarem */
+    padding: 0 20px;
+}
+
+.mainContent {
+    flex: 1; /* Główna treść zajmuje resztę miejsca */
+    min-width: 0; /* Zabezpieczenie przed wychodzeniem treści */
+}
+
+/* Responsywność - na mobile sidebar pod spodem */
+@media (max-width: 768px) {
+    .layoutWrapper {
+        flex-direction: column;
+    }
+}
