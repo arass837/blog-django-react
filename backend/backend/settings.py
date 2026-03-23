@@ -253,10 +253,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Render internal URL w produkcji, external URL lokalnie
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get(
-            'DATABASE_URL',
-            'postgresql://arek:8k3exk5cZ2mHGYToy2rlkDFhZhtI1y3f@dpg-d6tfvqdm5p6s73bc92lg-a.oregon-postgres.render.com:5432/oski'
-        )
+        default=os.environ.get('DATABASE_URL')
     )
 }
 

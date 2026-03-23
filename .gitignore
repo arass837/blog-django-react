@@ -23,3 +23,9 @@ build/
 
 .DS_Store
 Thumbs.db
+backend/.env
+*.env
+frontend/build/
+backend/staticfiles/
+.vscode/
+.idea/
