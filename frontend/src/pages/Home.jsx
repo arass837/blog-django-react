@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../api';
+import * as api from '../api';  // <-- zmiana tutaj
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import styles from './Home.module.css';
@@ -10,7 +10,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('posts/')
+    api.fetchPosts()
       .then(res => { setPosts(res.data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
@@ -22,10 +22,8 @@ export default function Home() {
       <h1>NEW POSTS...</h1>
       {posts.map(post => (
         <article key={post.id} className={`${styles.postCard} ${post.id === posts[0].id ? 'post-card' : ''}`}>
-
           <h2>{post.title}</h2>
           <p className={styles.meta}>Autor: {post.author_name}</p>
-          {/* Renderowanie Markdown */}
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {post.content.substring(0, 150) + '...'}
           </ReactMarkdown>

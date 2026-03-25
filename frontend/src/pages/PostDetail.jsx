@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import api from '../api';
+import * as api from '../api'; // <-- zmiana importu
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -12,7 +12,9 @@ export default function PostDetail() {
   const [post, setPost] = useState(null);
 
   useEffect(() => {
-    api.get(`posts/${id}/`).then(res => setPost(res.data));
+    api.fetchPostById(id) // <-- użycie named export
+      .then(res => setPost(res.data))
+      .catch(() => setPost(null));
   }, [id]);
 
   const copyToClipboard = (text) => {
