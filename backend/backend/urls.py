@@ -16,8 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.urls import path, re_path
+from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('', include("blog.urls")),
+    path('api/posts/', include("blog.urls")),
     path('admin/', admin.site.urls),
+     # Catch-all dla Reacta
+    re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
 ]

@@ -171,7 +171,7 @@ from datetime import timedelta
 import dj_database_url
 from dotenv import load_dotenv
 
-# Wczytaj .env, jeśli istnieje
+# Wczytaj .env lokalnie lub w Render
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -180,8 +180,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# Wpisz domenę Render swojego serwisu lub localhost
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
+# ALLOWED_HOSTS z ENV
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS', 'localhost,127.0.0.1'
+).split(',')
 
 # 📦 APPS
 INSTALLED_APPS = [
@@ -213,11 +215,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
-# 🌐 CORS (dev)
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:5173",
-]
+# 🌐 CORS
+CORS_ALLOWED_ORIGINS = os.environ.get(
+    'CORS_ALLOWED_ORIGINS',
+    'http://localhost:3000,http://localhost:5173'
+).split(',')
 
 # 🔑 DRF + JWT
 REST_FRAMEWORK = {
@@ -231,11 +233,10 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
-# 📄 TEMPLATES
+# 📄 TEMPLATES (React build)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # Dodaj katalog z React build
         'DIRS': [os.path.join(BASE_DIR, '../frontend/build')],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -250,11 +251,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# 🗄️ DATABASE
+# 🗄️ DATABASE (Render PostgreSQL)
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 # 🔒 PASSWORDS
@@ -274,9 +273,7 @@ USE_TZ = True
 # 📁 STATIC FILES (React build)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../frontend/build/static'),  # pliki statyczne React
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, '../frontend/build/static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # 🧠 DEFAULT PK
