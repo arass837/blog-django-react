@@ -28,33 +28,56 @@
 // export const postToken = (data) => axios.post(`${API_URL}/api/token/`, data);
 // =========================================================================================
 
+// import axios from 'axios';
+
+// const API_URL = process.env.REACT_APP_API_URL;
+
+// // pobranie wszystkich postów
+// export const fetchPosts = () => axios.get(`${API_URL}/api/posts/`);
+
+// // pobranie pojedynczego posta po ID
+// export const fetchPostById = (id) => axios.get(`${API_URL}/api/posts/${id}/`);
+
+// // tworzenie posta (z tokenem JWT)
+// export const createPost = (data, token) =>
+//   axios.post(`${API_URL}/api/posts/`, data, {
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
+
+// // aktualizacja posta (z tokenem JWT)
+// export const updatePost = (id, data, token) =>
+//   axios.put(`${API_URL}/api/posts/${id}/`, data, {
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
+
+// // usuwanie posta (z tokenem JWT)
+// export const deletePost = (id, token) =>
+//   axios.delete(`${API_URL}/api/posts/${id}/`, {
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
+
+// // login / pobranie tokena
+// export const postToken = (data) => axios.post(`${API_URL}/api/token/`, data);
+// ===================================================================================================
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
+// 🔥 NAJPROSTSZE I NAJPEWNIEJSZE
+export const fetchPosts = () => axios.get('/api/posts/');
+export const fetchPostById = (id) => axios.get(`/api/posts/${id}/`);
 
-// pobranie wszystkich postów
-export const fetchPosts = () => axios.get(`${API_URL}/api/posts/`);
-
-// pobranie pojedynczego posta po ID
-export const fetchPostById = (id) => axios.get(`${API_URL}/api/posts/${id}/`);
-
-// tworzenie posta (z tokenem JWT)
 export const createPost = (data, token) =>
-  axios.post(`${API_URL}/api/posts/`, data, {
+  axios.post('/api/posts/', data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-// aktualizacja posta (z tokenem JWT)
 export const updatePost = (id, data, token) =>
-  axios.put(`${API_URL}/api/posts/${id}/`, data, {
+  axios.put(`/api/posts/${id}/`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-// usuwanie posta (z tokenem JWT)
 export const deletePost = (id, token) =>
-  axios.delete(`${API_URL}/api/posts/${id}/`, {
+  axios.delete(`/api/posts/${id}/`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-// login / pobranie tokena
-export const postToken = (data) => axios.post(`${API_URL}/api/token/`, data);
+export const postToken = (data) => axios.post('/api/token/', data);
