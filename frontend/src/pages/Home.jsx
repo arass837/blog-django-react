@@ -50,6 +50,8 @@ export default function Home() {
     api.fetchPosts()
       .then(res => {
         const data = res.data;
+        // 🔥 DEBUG: sprawdź co przychodzi z API
+      console.log("Odpowiedź API:", data);
 
         // 🔥 obsługa DRF (pagination + bez pagination)
         if (Array.isArray(data)) {
