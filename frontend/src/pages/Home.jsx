@@ -47,29 +47,27 @@ export default function Home() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    api.fetchPosts()
-      .then(res => {
-        const data = res.data;
-        // 🔥 DEBUG: sprawdź co przychodzi z API
-      console.log("Odpowiedź API:", data);
+  api.fetchPosts()
+    .then(res => {
+      console.log("Odpowiedź API:", res.data);
+      const data = res.data;
 
-        // 🔥 obsługa DRF (pagination + bez pagination)
-        if (Array.isArray(data)) {
-          setPosts(data);
-        } else if (data.results) {
-          setPosts(data.results);
-        } else {
-          setPosts([]);
-        }
+      if (Array.isArray(data)) {
+        setPosts(data);
+      } else if (data.results) {
+        setPosts(data.results);
+      } else {
+        setPosts([]);
+      }
 
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Błąd pobierania:", err);
-        setError("Nie udało się pobrać postów");
-        setLoading(false);
-      });
-  }, []);
+      setLoading(false);
+    })
+    .catch(err => {
+      console.error("Błąd pobierania:", err);
+      setError("Nie udało się pobrać postów");
+      setLoading(false);
+    });
+}, []);
 
   // ⏳ loading
   if (loading) return <p>⏳ Ładowanie wpisów...</p>;
