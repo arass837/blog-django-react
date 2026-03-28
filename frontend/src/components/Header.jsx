@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
+import logo from "../assets/logo.jpg";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -24,7 +25,11 @@ export default function Header() {
   return (
     <header
       className={styles.header}
-      style={{ backgroundImage: "url('/images/logo.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: '60vh' }}
+      style={{ 
+ backgroundImage: `url(${logo})`, 
+  backgroundSize: 'cover', 
+  backgroundPosition: 'center'
+}}
     >
       <div className={styles.overlay} />
 
