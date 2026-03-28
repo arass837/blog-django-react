@@ -9,3 +9,10 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Views(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    count = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.name}: {self.count}"

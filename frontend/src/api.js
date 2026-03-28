@@ -1,28 +1,4 @@
 
-// // ===================================================================================================
-// import axios from 'axios';
-
-// // 🔥 NAJPROSTSZE I NAJPEWNIEJSZE
-// export const fetchPosts = () => axios.get('/api/posts/');
-// export const fetchPostById = (id) => axios.get(`/api/posts/${id}/`);
-
-// export const createPost = (data, token) =>
-//   axios.post('/api/posts/', data, {
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-
-// export const updatePost = (id, data, token) =>
-//   axios.put(`/api/posts/${id}/`, data, {
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-
-// export const deletePost = (id, token) =>
-//   axios.delete(`/api/posts/${id}/`, {
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-
-// export const postToken = (data) => axios.post('/api/token/', data);
-
 // =============================================================================================
 import axios from 'axios';
 
@@ -49,3 +25,6 @@ export const deletePost = (id, token) =>
   });
 
 export const postToken = (data) => API.post('/token/', data);
+
+// ==============================================================
+export const incrementViews = () => API.post("/views/increment/");
