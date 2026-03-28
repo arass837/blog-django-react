@@ -4,6 +4,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://blog-django-react-r6eq.onrender.com",
 
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
