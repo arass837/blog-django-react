@@ -13,14 +13,14 @@ export default function Header() {
     navigate('/login', { replace: true });
   };
 
-  const scrollToFirstPost = (e) => {
-    e.preventDefault();
-    const firstPost = document.querySelector('.post-card');
-    if (firstPost) {
-      const topOffset = firstPost.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({ top: topOffset, behavior: 'smooth' });
-    }
-  };
+const scrollToFirstPost = (e) => {
+  e.preventDefault();
+
+  const firstPost = document.getElementById('first-post');
+  if (firstPost) {
+    firstPost.scrollIntoView({ behavior: 'smooth' });
+  }
+};
 
   return (
     <header

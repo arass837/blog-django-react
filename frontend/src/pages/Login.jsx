@@ -18,6 +18,7 @@ export default function Login() {
       const response = await axios.post(`${API_URL}/token/`, { username, password });
       localStorage.setItem('access_token', response.data.access);
       localStorage.setItem('refresh_token', response.data.refresh);
+      console.log("API_URL =", API_URL);
       navigate('/'); // przejście do strony głównej
     } catch (error) {
       alert('Błąd logowania: Nieprawidłowe dane');
