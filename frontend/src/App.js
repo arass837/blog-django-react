@@ -18,7 +18,7 @@ export default function App() {
           <main className={styles.mainContent}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/post/:id" element={<PostDetail />} />
+              <Route path="/post/:slug" element={<PostDetail />} />
               <Route path="/login" element={<Login />} />
             </Routes>
           </main>

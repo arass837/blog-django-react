@@ -84,7 +84,7 @@ useEffect(() => {
 
       {posts.map((post, index) => (
         <article
-          key={post.id}
+          key={post.slug}
              id={index === 0 ? "first-post" : undefined}  // <-- tutaj id
           className={`${styles.postCard} ${
             index === 0 ? styles.featured : ""
@@ -100,7 +100,7 @@ useEffect(() => {
             {(post.content || "").substring(0, 150) + "..."}
           </ReactMarkdown>
 
-          <Link to={`/post/${post.id}`} className={styles.link}>
+          <Link to={`/post/${post.slug}`} className={styles.link}>
             Czytaj więcej →
           </Link>
         </article>

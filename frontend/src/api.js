@@ -7,20 +7,20 @@ const API = axios.create({
 });
 
 export const fetchPosts = () => API.get('/posts/');
-export const fetchPostById = (id) => API.get(`/posts/${id}/`);
+export const fetchPostById = (slug) => API.get(`/posts/${slug}/`);
 
 export const createPost = (data, token) =>
   API.post('/posts/', data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-export const updatePost = (id, data, token) =>
-  API.put(`/posts/${id}/`, data, {
+export const updatePost = (slug, data, token) =>
+  API.put(`/posts/${slug}/`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-export const deletePost = (id, token) =>
-  API.delete(`/posts/${id}/`, {
+export const deletePost = (slug, token) =>
+  API.delete(`/posts/${slug}/`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

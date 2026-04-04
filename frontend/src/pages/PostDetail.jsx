@@ -8,14 +8,14 @@ import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styles from './PostDetail.module.css';
 
 export default function PostDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [post, setPost] = useState(null);
 
   useEffect(() => {
-    api.fetchPostById(id) // <-- użycie named export
+    api.fetchPostById(slug) // <-- użycie named export
       .then(res => setPost(res.data))
       .catch(() => setPost(null));
-  }, [id]);
+  }, [slug]);
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
