@@ -7,6 +7,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = 'slug'
 
     # Automatyczne przypisywanie zalogowanego usera jako autora przy tworzeniu posta
     def perform_create(self, serializer):
