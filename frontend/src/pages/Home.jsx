@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "./Home.module.css";
+import { useLocation } from 'react-router-dom';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -47,6 +48,23 @@ useEffect(() => {
     localStorage.setItem(key, "true");
   }
 }, []);
+// ==================================================================
+  // ===============================================================
+  // przewinięcie po kliknięciu przycisku w Header
+  const loc = useLocation();  // <-- zmiana nazwy
+
+  useEffect(() => {
+    if (loc.state?.scrollToFirstPost) {
+      const firstPost = document.getElementById('first-post');
+      if (firstPost) firstPost.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [loc]);
+
+  // ===============================================================
+
+
+
+
 // =================================================================
 
   // ⏳ loading
@@ -58,6 +76,8 @@ useEffect(() => {
   // 📭 brak postów
   if (!posts.length) return <p>Brak postów 😢</p>;
 
+
+
   return (
     <div className={styles.list}>
       <h1>🆕 NEW POSTS</h1>
@@ -65,6 +85,7 @@ useEffect(() => {
       {posts.map((post, index) => (
         <article
           key={post.id}
+             id={index === 0 ? "first-post" : undefined}  // <-- tutaj id
           className={`${styles.postCard} ${
             index === 0 ? styles.featured : ""
           }`}

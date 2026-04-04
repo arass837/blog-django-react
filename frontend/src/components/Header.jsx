@@ -13,14 +13,14 @@ export default function Header() {
     navigate('/login', { replace: true });
   };
 
-const scrollToFirstPost = (e) => {
-  e.preventDefault();
+// const scrollToFirstPost = (e) => {
+//   e.preventDefault();
 
-  const firstPost = document.getElementById('first-post');
-  if (firstPost) {
-    firstPost.scrollIntoView({ behavior: 'smooth' });
-  }
-};
+//   const firstPost = document.getElementById('first-post');
+//   if (firstPost) {
+//     firstPost.scrollIntoView({ behavior: 'smooth' });
+//   }
+// };
 
   return (
     <header
@@ -50,7 +50,11 @@ const scrollToFirstPost = (e) => {
           <h1 className={styles.title}>Witaj w ReactoDjango</h1>
           <div className={styles.heroBottom}>
             <p className={styles.subtitle}>Frontend w React + Backend w Django</p>
-            <button type="button" className={styles.cta} onClick={scrollToFirstPost}>Zacznij teraz</button>
+            {/* <button type="button" className={styles.cta} onClick={scrollToFirstPost}>Zacznij teraz</button> */}
+<button type="button" className={styles.cta} onClick={() => navigate("/", { state: { scrollToFirstPost: true } })}>
+  Zacznij teraz
+</button>
+
           </div>
         </div>
       </div>
