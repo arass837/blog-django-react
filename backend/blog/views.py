@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from .models import Post
 from .serializers import PostSerializer
 
@@ -21,7 +21,8 @@ from .serializers import ViewsSerializer
 class ViewsViewSet(viewsets.ModelViewSet):
     queryset = Views.objects.all()
     serializer_class = ViewsSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
     # 🔥 custom endpoint: /api/views/increment/
     @action(detail=False, methods=['post'])
