@@ -9,19 +9,10 @@
     background-repeat: no-repeat;
 }
 
-.background {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-}
-
 .overlay {
     position: absolute;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.55);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
 }
 
@@ -30,7 +21,7 @@
     z-index: 2;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 24px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -40,18 +31,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: auto;
 }
 
 .logo {
-    font-size: 1.6rem;
-    font-weight: bold;
+    font-size: 1.8rem;
+    font-weight: 700;
     color: #00d4ff;
     text-decoration: none;
 }
 
 .nav {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     align-items: center;
 }
 
@@ -59,6 +51,7 @@
     color: white;
     text-decoration: none;
     font-weight: 500;
+    font-size: 1rem;
 }
 
 .link:hover {
@@ -72,45 +65,96 @@
     padding: 8px 18px;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
     text-decoration: none;
+    transition: all 0.25s ease;
 }
 
 .authBtn:hover {
     background-color: #00b8e6;
+    transform: translateY(-1px);
 }
 
 .hero {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    max-width: 600px;
-    padding-bottom: 40px;
+    width: 100%;
+    max-width: none;
+    padding-bottom: 48px;
 }
 
-
 .title {
-    font-size: 3rem;
+    font-size: 3.2rem;
+    font-weight: 700;
     margin-bottom: 12px;
 }
 
 .subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 24px;
-    line-height: 1.5;
+    font-size: 1.25rem;
+    margin-bottom: 28px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .cta {
-    align-self: flex-start;
+    display: inline-block;
     background-color: #00d4ff;
     color: #222;
-    padding: 12px 24px;
+    padding: 12px 26px;
     border-radius: 8px;
-    font-weight: bold;
+    font-weight: 600;
     text-decoration: none;
+    margin-bottom: 24px;
+    transition: all 0.25s ease;
 }
 
 .cta:hover {
     background-color: #00b8e6;
+    transform: translateY(-2px);
+}
+
+/* 🔥 Sekcja "Wprowadzenie do:" */
+.introLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: center;
+    justify-content: flex-end; /* prawa strona */
+    margin-top: 40px; /* niżej */
+    width: 100%;
+}
+
+/* napis */
+.introLinks span {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* linki */
+.introLink {
+    font-size: 1.3rem;
+    color: #00d4ff;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.25s ease;
+}
+
+/* animowana linia */
+.introLink::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background-color: #00d4ff;
+    transition: width 0.25s ease;
+}
+
+.introLink:hover::after {
+    width: 100%;
+}
+
+.introLink:hover {
+    color: #00b8e6;
 }

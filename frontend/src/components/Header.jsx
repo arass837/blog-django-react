@@ -49,13 +49,22 @@ export default function Header() {
         <div className={styles.hero}>
           <h1 className={styles.title}>Witaj w ReactoDjango</h1>
           <div className={styles.heroBottom}>
-            <p className={styles.subtitle}>Frontend w React + Backend w Django</p>
-            {/* <button type="button" className={styles.cta} onClick={scrollToFirstPost}>Zacznij teraz</button> */}
-<button type="button" className={styles.cta} onClick={() => navigate("/", { state: { scrollToFirstPost: true } })}>
-  Zacznij teraz
-</button>
+  <p className={styles.subtitle}>Frontend w React + Backend w Django</p>
+  <button
+    type="button"
+    className={styles.cta}
+    onClick={() => navigate("/", { state: { scrollToFirstPost: true } })}
+  >
+    Zacznij teraz
+  </button>
 
-          </div>
+  <div className={styles.introLinks}>
+    <span>Wprowadzenie do: </span>
+    <Link to="/python" className={styles.introLink}>Python</Link>
+    <Link to="/django" className={styles.introLink}>Django</Link>
+    <Link to="/react" className={styles.introLink}>React</Link>
+  </div>
+</div>
         </div>
       </div>
     </header>
