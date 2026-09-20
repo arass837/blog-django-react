@@ -64,7 +64,7 @@ export default function Home() {
       <div className={styles.list}>
         {posts.map((post, index) => (
           <article
-            key={post.id}
+            key={post.slug}
             className={`${styles.postCard} ${index === 0 ? 'post-card' : ''}`}
           >
             <div className={styles.cardTop}>
@@ -84,7 +84,7 @@ export default function Home() {
               </ReactMarkdown>
             </div>
 
-            <Link to={`/post/${post.id}`} className={styles.readMore}>
+            <Link to={`/post/${post.slug}`} className={styles.readMore}>
               Read article <span aria-hidden="true">→</span>
             </Link>
           </article>
