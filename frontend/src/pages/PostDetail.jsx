@@ -8,12 +8,12 @@ import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styles from './PostDetail.module.css';
 
 export default function PostDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [post, setPost] = useState(null);
 
   useEffect(() => {
-    api.get(`posts/${id}/`).then(res => setPost(res.data));
-  }, [id]);
+    api.get(`posts/${slug}/`).then(res => setPost(res.data));
+  }, [slug]);
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
