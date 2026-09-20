@@ -1,30 +1,16 @@
-
-// =============================================================================================
 import axios from 'axios';
 
-const API = axios.create({
-  baseURL: '/api',
+const rawBaseUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api/';
+const baseURL = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
+
+const api = axios.create({ baseURL });
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
-export const fetchPosts = () => API.get('/posts/');
-export const fetchPostById = (slug) => API.get(`/posts/${slug}/`);
-
-export const createPost = (data, token) =>
-  API.post('/posts/', data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-export const updatePost = (slug, data, token) =>
-  API.put(`/posts/${slug}/`, data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-export const deletePost = (slug, token) =>
-  API.delete(`/posts/${slug}/`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-export const postToken = (data) => API.post('/token/', data);
-
-// ==============================================================
-export const incrementViews = () => API.post("/views/increment/");
+export default api;

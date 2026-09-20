@@ -1,110 +1,95 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../api';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import styles from './Home.module.css';
 
-// ========================================================================================================================
-import { useEffect, useState } from "react";
-import * as api from "../api";
-import { Link } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import styles from "./Home.module.css";
-import { useLocation } from 'react-router-dom';
+const formatDate = (value) => {
+  if (!value) return '';
+  return new Intl.DateTimeFormat('en-US', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(value));
+};
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-  api.fetchPosts()
-    .then(res => {
-      console.log("Odpowiedź API:", res.data);
-      const data = res.data;
-
-      if (Array.isArray(data)) {
-        setPosts(data);
-      } else if (data.results) {
-        setPosts(data.results);
-      } else {
-        setPosts([]);
-      }
-
-      setLoading(false);
-    })
-    .catch(err => {
-      console.error("Błąd pobierania:", err);
-      setError("Nie udało się pobrać postów");
-      setLoading(false);
-    });
-}, []);
-
-// ===============================================================
-useEffect(() => {
-  const key = "visited_homepage";
-
-  if (!localStorage.getItem(key)) {
-    api.incrementViews()   // 👈 używamy Twojego api.js
-      .then(res => console.log("Views:", res.data.views))
-      .catch(err => console.error(err));
-
-    localStorage.setItem(key, "true");
-  }
-}, []);
-// ==================================================================
-  // ===============================================================
-  // przewinięcie po kliknięciu przycisku w Header
-  const loc = useLocation();  // <-- zmiana nazwy
-
-  useEffect(() => {
-    if (loc.state?.scrollToFirstPost) {
-      const firstPost = document.getElementById('first-post');
-      if (firstPost) firstPost.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [loc]);
-
-  // ===============================================================
-
-
-
-
-// =================================================================
-
-  // ⏳ loading
-  if (loading) return <p>⏳ Ładowanie wpisów...</p>;
-
-  // ❌ error
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-
-  // 📭 brak postów
-  if (!posts.length) return <p>Brak postów 😢</p>;
-
-
+    api.get('posts/')
+      .then(res => {
+        setPosts(Array.isArray(res.data) ? res.data : res.data.results || []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
+  }, []);
 
   return (
-    <div className={styles.list}>
-      <h1>🆕 NEW POSTS</h1>
+    <section className={styles.section}>
+      <div className={styles.headingRow}>
+        <div>
+          <span className={styles.kicker}>LATEST</span>
+          <h2>Latest posts</h2>
+          <p>Notes, solutions, and lessons from everyday software development.</p>
+        </div>
+        {!loading && !error && (
+          <span className={styles.counter}>{posts.length} {posts.length === 1 ? 'post' : 'posts'}</span>
+        )}
+      </div>
 
-      {posts.map((post, index) => (
-        <article
-          key={post.slug}
-             id={index === 0 ? "first-post" : undefined}  // <-- tutaj id
-          className={`${styles.postCard} ${
-            index === 0 ? styles.featured : ""
-          }`}
-        >
-          <h2>{post.title}</h2>
+      {loading && (
+        <div className={styles.statusCard}>
+          <span className={styles.loader} />
+          Loading posts...
+        </div>
+      )}
 
-          <p className={styles.meta}>
-            Autor: {post.author_name || "Nieznany"}
-          </p>
+      {error && (
+        <div className={styles.errorCard}>
+          Could not load posts. Please try again in a moment.
+        </div>
+      )}
 
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {(post.content || "").substring(0, 150) + "..."}
-          </ReactMarkdown>
+      {!loading && !error && posts.length === 0 && (
+        <div className={styles.emptyCard}>There are no posts yet.</div>
+      )}
 
-          <Link to={`/post/${post.slug}`} className={styles.link}>
-            Czytaj więcej →
-          </Link>
-        </article>
-      ))}
-    </div>
+      <div className={styles.list}>
+        {posts.map((post, index) => (
+          <article
+            key={post.id}
+            className={`${styles.postCard} ${index === 0 ? 'post-card' : ''}`}
+          >
+            <div className={styles.cardTop}>
+              <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
+              <div className={styles.meta}>
+                <span>{post.author_name || 'Author'}</span>
+                {post.created_at && <span className={styles.dot}>•</span>}
+                {post.created_at && <time>{formatDate(post.created_at)}</time>}
+              </div>
+            </div>
+
+            <h3>{post.title}</h3>
+
+            <div className={styles.excerpt}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {(post.content || '').slice(0, 230) + ((post.content || '').length > 230 ? '…' : '')}
+              </ReactMarkdown>
+            </div>
+
+            <Link to={`/post/${post.id}`} className={styles.readMore}>
+              Read article <span aria-hidden="true">→</span>
+            </Link>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }

@@ -2,20 +2,28 @@ import React from 'react';
 import styles from './Sidebar.module.css';
 
 export default function Sidebar() {
-    return (
-        <aside className={styles.sidebar}>
-            <div className={styles.widget}>
-                <h3>ABOUT BLOG</h3>
-                <p>Welcome to Arek’s blog! I’m an enthusiastic hobbyist exploring the world of programming and technologies in 2026, with a special love for React on the frontend and Django on the backend. Join me as I experiment, learn, and share my coding adventures!</p>
-            </div>
-            <div className={styles.widget}>
-                <h3>Kategorie</h3>
-                <ul>
-                    <li>React</li>
-                    <li>Django</li>
-                    <li>Web Design</li>
-                </ul>
-            </div>
-        </aside>
-    );
+  return (
+    <aside className={styles.sidebar}>
+      <div className={styles.profileCard}>
+        <span className={styles.label}>ABOUT THE BLOG</span>
+        <div className={styles.avatar}>A</div>
+        <h3>ReactoDjango</h3>
+        <p>
+          A blog about building web applications, learning software development, and
+          combining React with Django REST Framework in real-world projects.
+        </p>
+      </div>
+
+      <div className={styles.widget}>
+        <span className={styles.label}>TECHNOLOGIES</span>
+        <div className={styles.tags}>
+          <span>React</span>
+          <span>Django</span>
+          <span>REST API</span>
+          <span>Python</span>
+          <span>Web Design</span>
+        </div>
+      </div>
+    </aside>
+  );
 }

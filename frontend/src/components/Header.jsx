@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
-import logo from "../assets/logo.jpg";
 
 export default function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const isLogged = Boolean(localStorage.getItem('access_token'));
+  const isHome = location.pathname === '/';
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
@@ -13,59 +14,65 @@ export default function Header() {
     navigate('/login', { replace: true });
   };
 
-// const scrollToFirstPost = (e) => {
-//   e.preventDefault();
-
-//   const firstPost = document.getElementById('first-post');
-//   if (firstPost) {
-//     firstPost.scrollIntoView({ behavior: 'smooth' });
-//   }
-// };
-
   return (
-    <header
-      className={styles.header}
-      style={{ 
- backgroundImage: `url(${logo})`, 
-  backgroundSize: 'cover', 
-  backgroundPosition: 'center'
-}}
-    >
-      <div className={styles.overlay} />
+    <header className={`${styles.header} ${!isHome ? styles.compactHeader : ''}`}>
+      {isHome && (
+        <>
+          <div className={styles.glowOne} />
+          <div className={styles.glowTwo} />
+        </>
+      )}
 
       <div className={styles.container}>
         <div className={styles.topBar}>
-          <Link to="/" className={styles.logo}>ReactoDjango</Link>
+          <Link to="/" className={styles.brand} aria-label="ReactoDjango - home">
+            <span className={styles.brandMark}>RD</span>
+            <span>ReactoDjango</span>
+          </Link>
+
           <nav className={styles.nav}>
-            <Link to="/" className={styles.link}>Start</Link>
+            <Link to="/" className={styles.link}>Home</Link>
+            <Link to="/posts" className={styles.link}>Posts</Link>
             {isLogged ? (
-              <button type="button" onClick={handleLogout} className={styles.authBtn}>Wyloguj</button>
+              <button type="button" onClick={handleLogout} className={styles.authBtn}>Log out</button>
             ) : (
-              <Link to="/login" className={styles.authBtn}>Zaloguj</Link>
+              <Link to="/login" className={styles.authBtn}>Log in</Link>
             )}
           </nav>
         </div>
 
-        <div className={styles.hero}>
-          <h1 className={styles.title}>Witaj w ReactoDjango</h1>
-          <div className={styles.heroBottom}>
-  <p className={styles.subtitle}>Frontend w React + Backend w Django</p>
-  <button
-    type="button"
-    className={styles.cta}
-    onClick={() => navigate("/", { state: { scrollToFirstPost: true } })}
-  >
-    Zacznij teraz
-  </button>
+        {isHome && (
+          <div className={styles.hero}>
+            <div className={styles.heroCopy}>
+              <span className={styles.eyebrow}>WEB DEVELOPMENT BLOG</span>
+              <h1>React on the frontend.<br />Django on the backend.</h1>
+              <p>
+                Practical articles, examples, and experiments focused on building modern
+                web applications with React and Django.
+              </p>
 
-  <div className={styles.introLinks}>
-    <span>Wprowadzenie do: </span>
-    <Link to="/python" className={styles.introLink}>Python</Link>
-    <Link to="/django" className={styles.introLink}>Django</Link>
-    <Link to="/react" className={styles.introLink}>React</Link>
-  </div>
-</div>
-        </div>
+              <div className={styles.actions}>
+                <Link to="/posts" className={styles.primaryCta}>
+                  Read the latest posts <span aria-hidden="true">→</span>
+                </Link>
+                <span className={styles.techBadge}>React + Django REST</span>
+              </div>
+            </div>
+
+            <div className={styles.visual} aria-hidden="true">
+              <div className={styles.logoCard}>
+                <div className={styles.logoCardTop}>
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <img src="/images/logo.jpg" alt="" />
+              </div>
+              <div className={styles.codeChip}>API ready</div>
+              <div className={styles.reactChip}>React UI</div>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );

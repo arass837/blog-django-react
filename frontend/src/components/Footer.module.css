@@ -1,7 +1,42 @@
 .footer {
-  text-align: center;
-  padding: 20px;
-  background: #eee;
-  color: #555;
-  margin-top: 40px;
+  margin-top: 70px;
+  border-top: 1px solid #e2e8f0;
+  background: #0f172a;
+}
+
+.inner {
+  display: flex;
+  width: min(1180px, calc(100% - 40px));
+  min-height: 118px;
+  margin: 0 auto;
+  justify-content: space-between;
+  align-items: center;
+  color: #cbd5e1;
+}
+
+.inner > div {
+  display: grid;
+  gap: 5px;
+}
+
+.inner strong {
+  color: white;
+  font-size: 1rem;
+}
+
+.inner span,
+.inner p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 620px) {
+  .inner {
+    width: calc(100% - 28px);
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
 }
