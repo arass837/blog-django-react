@@ -1,31 +1,39 @@
-# Django
+# Python / Django
 __pycache__/
-*.pyc
-db.sqlite3
-.env
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+staticfiles/
 media/
 
-# PostgreSQL (opcjonalnie)
+# Local secrets / environment files
+.env
+.env.*
+backend/.env.local
+backend/.env.production
+!backend/.env.example
+!frontend/.env.development
+
+# One-off migration/backup files (do not commit user/database data)
+backend/blog_full_backup*.json
+backend/backend/settings_neon.py
 *.sql
 
-# Python venv
+# Python environments
 venv/
+.venv/
 env/
 
 # React
 node_modules/
-build/
+frontend/build/
 
-# logs
+# Logs / coverage
 *.log
+coverage/
 
-# system
-
+# IDE / system
 .DS_Store
 Thumbs.db
-backend/.env
-*.env
-frontend/build/
-backend/staticfiles/
-.vscode/
 .idea/

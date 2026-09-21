@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "name": "blog-django-react",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "python.terminal.activateEnvironment": true
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python"
+    ]
+  }
+}

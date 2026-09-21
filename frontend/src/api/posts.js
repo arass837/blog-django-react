@@ -1,7 +1,7 @@
 import api from '../api';
 
 export const fetchPosts = () => api.get('posts/');
+export const fetchPostBySlug = (slug) => api.get(`posts/${slug}/`);
 export const createPost = (data) => api.post('posts/', data);
-export const fetchPostById = (id) => api.get(`posts/${id}/`);
-export const updatePost = (id, data) => api.put(`posts/${id}/`, data);
-export const deletePost = (id) => api.delete(`posts/${id}/`);
+export const updatePost = (slug, data) => api.put(`posts/${slug}/`, data);
+export const deletePost = (slug) => api.delete(`posts/${slug}/`);

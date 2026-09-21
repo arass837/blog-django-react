@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: blog-django-react
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: ./build.sh
+    startCommand: gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      # Paste the Neon connection string in Render.
+      - key: DATABASE_URL
+        sync: false
+      # Example: blog-django-react-r6eq.onrender.com
+      - key: ALLOWED_HOSTS
+        sync: false
+      # Example: https://blog-django-react-frontend.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+
+  - type: web
+    name: blog-django-react-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Example: https://blog-django-react-r6eq.onrender.com/api/
+      - key: REACT_APP_API_URL
+        sync: false
