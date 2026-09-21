@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api';
+import { trackPostView } from '../analytics';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -12,7 +13,10 @@ export default function PostDetail() {
   const [post, setPost] = useState(null);
 
   useEffect(() => {
-    api.get(`posts/${slug}/`).then(res => setPost(res.data));
+    api.get(`posts/${slug}/`).then(res => {
+      setPost(res.data);
+      trackPostView(slug);
+    });
   }, [slug]);
 
   const copyToClipboard = (text) => {
