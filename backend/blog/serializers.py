@@ -6,7 +6,10 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'slug', 'is_published','category','content', 'created_at', 'author_name']
+        fields = [
+            'id', 'title', 'slug', 'is_published', 'category', 'content',
+            'seo_title', 'seo_description', 'created_at', 'updated_at', 'author_name'
+        ]
 
 class ViewsSerializer(serializers.ModelSerializer):
     class Meta:

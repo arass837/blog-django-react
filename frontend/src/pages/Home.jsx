@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import Seo, { getSiteUrl } from '../components/Seo';
 import styles from './Home.module.css';
 
 const formatDate = (value) => {
@@ -31,8 +32,23 @@ export default function Home() {
       });
   }, []);
 
+  const websiteSchema = useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'ReactoDjango',
+    url: getSiteUrl(),
+    description: 'Practical tutorials about React, Django, REST APIs, authentication, deployment, and full-stack development.',
+  }), []);
+
   return (
     <section className={styles.section}>
+      <Seo
+        title="ReactoDjango | Practical React + Django Tutorials"
+        description="Practical React and Django tutorials covering REST APIs, authentication, CORS, Axios, PostgreSQL, Render deployment, and full-stack development."
+        path="/"
+        schema={websiteSchema}
+      />
+
       <div className={styles.headingRow}>
         <div>
           <span className={styles.kicker}>LATEST</span>
@@ -72,11 +88,15 @@ export default function Home() {
               <div className={styles.meta}>
                 <span>{post.author_name || 'Author'}</span>
                 {post.created_at && <span className={styles.dot}>•</span>}
-                {post.created_at && <time>{formatDate(post.created_at)}</time>}
+                {post.created_at && <time dateTime={post.created_at}>{formatDate(post.created_at)}</time>}
               </div>
             </div>
 
-            <h3>{post.title}</h3>
+            <h3>
+              <Link to={`/post/${post.slug}`} className={styles.titleLink}>
+                {post.title}
+              </Link>
+            </h3>
 
             <div className={styles.excerpt}>
               <ReactMarkdown remarkPlugins={[remarkGfm]}>

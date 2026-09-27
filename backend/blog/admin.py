@@ -5,10 +5,19 @@ from .models import DailyVisit, Post, PostDailyView, PostVisitor, Visitor, Views
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'is_published', 'created_at')
+    list_display = ('title', 'category', 'is_published', 'created_at', 'updated_at')
     list_filter = ('category', 'is_published')
-    search_fields = ('title', 'content')
+    search_fields = ('title', 'content', 'seo_title', 'seo_description')
     prepopulated_fields = {'slug': ('title',)}
+    fieldsets = (
+        (None, {
+            'fields': ('author', 'title', 'slug', 'content', 'category', 'is_published'),
+        }),
+        ('SEO', {
+            'fields': ('seo_title', 'seo_description'),
+            'description': 'Optional. Leave blank to generate SEO metadata from the post title and content.',
+        }),
+    )
 
 
 @admin.register(Visitor)

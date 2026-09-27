@@ -18,7 +18,20 @@ class Post(models.Model):
     content = models.TextField()
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='fullstack')
     is_published = models.BooleanField(default=True)
+    seo_title = models.CharField(
+        max_length=70,
+        blank=True,
+        default='',
+        help_text='Optional SEO title. Leave blank to use the post title.',
+    )
+    seo_description = models.CharField(
+        max_length=170,
+        blank=True,
+        default='',
+        help_text='Optional meta description for search engines (recommended: 140-160 characters).',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
