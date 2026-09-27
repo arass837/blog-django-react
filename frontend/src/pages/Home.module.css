@@ -210,3 +210,14 @@
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+
+.clearFilter {
+  color: #0369a1;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.clearFilter:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

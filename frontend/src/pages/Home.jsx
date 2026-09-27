@@ -1,10 +1,59 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import api from '../api';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Seo, { getSiteUrl } from '../components/Seo';
 import styles from './Home.module.css';
+
+const technologyLabels = {
+  react: 'React',
+  django: 'Django',
+  'rest-api': 'REST API',
+  python: 'Python',
+  'web-design': 'Web Design',
+};
+
+const postMatchesTechnology = (post, technology) => {
+  if (!technology) return true;
+
+  const category = (post.category || '').toLowerCase();
+  const searchableText = `${post.title || ''} ${post.content || ''}`.toLowerCase();
+
+  switch (technology) {
+    case 'react':
+      return category === 'react' || category === 'fullstack' || searchableText.includes('react');
+    case 'django':
+      return category === 'django' || category === 'fullstack' || searchableText.includes('django');
+    case 'rest-api':
+      return (
+        searchableText.includes('rest api') ||
+        searchableText.includes('django rest framework') ||
+        searchableText.includes('rest framework') ||
+        searchableText.includes('drf') ||
+        searchableText.includes('api endpoint')
+      );
+    case 'python':
+      return (
+        category === 'python' ||
+        category === 'django' ||
+        searchableText.includes('python')
+      );
+    case 'web-design':
+      return (
+        searchableText.includes('web design') ||
+        searchableText.includes('responsive') ||
+        searchableText.includes('css') ||
+        searchableText.includes('html') ||
+        searchableText.includes('frontend') ||
+        searchableText.includes('front-end') ||
+        searchableText.includes('user interface') ||
+        searchableText.includes(' ui ')
+      );
+    default:
+      return true;
+  }
+};
 
 const formatDate = (value) => {
   if (!value) return '';
@@ -19,6 +68,10 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const technology = searchParams.get('technology') || '';
+  const technologyLabel = technologyLabels[technology] || '';
 
   useEffect(() => {
     api.get('posts/')
@@ -32,6 +85,11 @@ export default function Home() {
       });
   }, []);
 
+  const filteredPosts = useMemo(
+    () => posts.filter((post) => postMatchesTechnology(post, technology)),
+    [posts, technology]
+  );
+
   const websiteSchema = useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -43,20 +101,36 @@ export default function Home() {
   return (
     <section className={styles.section}>
       <Seo
-        title="ReactoDjango | Practical React + Django Tutorials"
-        description="Practical React and Django tutorials covering REST APIs, authentication, CORS, Axios, PostgreSQL, Render deployment, and full-stack development."
+        title={technologyLabel
+          ? `${technologyLabel} Tutorials | ReactoDjango`
+          : 'ReactoDjango | Practical React + Django Tutorials'}
+        description={technologyLabel
+          ? `Browse practical ${technologyLabel} tutorials, examples, and development notes on ReactoDjango.`
+          : 'Practical React and Django tutorials covering REST APIs, authentication, CORS, Axios, PostgreSQL, Render deployment, and full-stack development.'}
         path="/"
         schema={websiteSchema}
       />
 
       <div className={styles.headingRow}>
         <div>
-          <span className={styles.kicker}>LATEST</span>
-          <h2>Latest posts</h2>
-          <p>Notes, solutions, and lessons from everyday software development.</p>
+          <span className={styles.kicker}>{technologyLabel ? 'TECHNOLOGY' : 'LATEST'}</span>
+          <h2>{technologyLabel ? `${technologyLabel} posts` : 'Latest posts'}</h2>
+          <p>
+            {technologyLabel
+              ? `Articles related to ${technologyLabel}.`
+              : 'Notes, solutions, and lessons from everyday software development.'}
+            {technologyLabel && (
+              <>
+                {' '}
+                <Link to="/" className={styles.clearFilter}>Show all posts</Link>
+              </>
+            )}
+          </p>
         </div>
         {!loading && !error && (
-          <span className={styles.counter}>{posts.length} {posts.length === 1 ? 'post' : 'posts'}</span>
+          <span className={styles.counter}>
+            {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
+          </span>
         )}
       </div>
 
@@ -73,12 +147,19 @@ export default function Home() {
         </div>
       )}
 
-      {!loading && !error && posts.length === 0 && (
-        <div className={styles.emptyCard}>There are no posts yet.</div>
+      {!loading && !error && filteredPosts.length === 0 && (
+        <div className={styles.emptyCard}>
+          No posts found for {technologyLabel || 'this technology'}.
+          {technologyLabel && (
+            <>
+              {' '}<Link to="/" className={styles.clearFilter}>Show all posts</Link>
+            </>
+          )}
+        </div>
       )}
 
       <div className={styles.list}>
-        {posts.map((post, index) => (
+        {filteredPosts.map((post, index) => (
           <article
             key={post.slug}
             className={`${styles.postCard} ${index === 0 ? 'post-card' : ''}`}

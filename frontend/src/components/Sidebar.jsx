@@ -1,7 +1,19 @@
 import React from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 
+const technologies = [
+  { slug: 'react', label: 'React' },
+  { slug: 'django', label: 'Django' },
+  { slug: 'rest-api', label: 'REST API' },
+  { slug: 'python', label: 'Python' },
+  { slug: 'web-design', label: 'Web Design' },
+];
+
 export default function Sidebar() {
+  const [searchParams] = useSearchParams();
+  const activeTechnology = searchParams.get('technology') || '';
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.profileCard}>
@@ -17,11 +29,17 @@ export default function Sidebar() {
       <div className={styles.widget}>
         <span className={styles.label}>TECHNOLOGIES</span>
         <div className={styles.tags}>
-          <span>React</span>
-          <span>Django</span>
-          <span>REST API</span>
-          <span>Python</span>
-          <span>Web Design</span>
+          {technologies.map((technology) => (
+            <Link
+              key={technology.slug}
+              to={`/?technology=${technology.slug}`}
+              className={`${styles.tag} ${
+                activeTechnology === technology.slug ? styles.activeTag : ''
+              }`}
+            >
+              {technology.label}
+            </Link>
+          ))}
         </div>
       </div>
     </aside>
