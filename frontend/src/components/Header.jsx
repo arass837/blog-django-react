@@ -1,12 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
+import api from '../api';
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const isLogged = Boolean(localStorage.getItem('access_token'));
   const isHome = location.pathname === '/';
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    if (!isLogged) {
+      setIsAdmin(false);
+      return () => { active = false; };
+    }
+
+    api.get('me/')
+      .then((response) => {
+        if (active) {
+          setIsAdmin(Boolean(response.data?.is_staff));
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setIsAdmin(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [isLogged]);
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
@@ -33,6 +60,7 @@ export default function Header() {
           <nav className={styles.nav}>
             <Link to="/" className={styles.link}>Home</Link>
             <Link to="/posts" className={styles.link}>Posts</Link>
+            {isAdmin && <Link to="/stats" className={styles.link}>Statistics</Link>}
             {isLogged ? (
               <button type="button" onClick={handleLogout} className={styles.authBtn}>Log out</button>
             ) : (

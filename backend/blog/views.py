@@ -6,18 +6,38 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import DailyVisit, Post, PostDailyView, PostVisitor, Visitor, Views
 from .serializers import PostSerializer, ViewsSerializer
 
 
+class CurrentUserView(APIView):
+    """Return only the auth flags needed by the React navbar."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({
+            'username': request.user.username,
+            'is_staff': request.user.is_staff,
+            'is_superuser': request.user.is_superuser,
+        })
+
+
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'slug'
+
+    def get_queryset(self):
+        qs = Post.objects.all().order_by('-created_at')
+        # Public visitors and search engines should only receive published posts.
+        if not self.request.user.is_authenticated or not self.request.user.is_staff:
+            qs = qs.filter(is_published=True)
+        return qs
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
