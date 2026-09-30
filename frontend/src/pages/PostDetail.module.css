@@ -1,126 +1,140 @@
-/* Kontener całego posta */
-.container {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  max-width: 900px;
-  margin: 20px auto;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+.page {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 44px;
+  align-items: start;
+  width: 100%;
 }
 
-/* Link "Wróć" */
-.back {
+.loading {
+  min-height: 40vh;
+  color: #64748b;
+}
+
+.toc {
+  min-width: 0;
+}
+
+.tocInner {
+  position: sticky;
+  top: 24px;
+  padding: 26px 18px 26px 2px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+
+.seriesLink {
   display: inline-block;
-  margin-bottom: 20px;
-  color: #666;
+  color: #2563eb;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.seriesLink:hover {
+  text-decoration: underline;
+}
+
+.tocDivider {
+  height: 1px;
+  margin: 22px 0;
+  background: #e5e7eb;
+}
+
+.tocLabel {
+  display: block;
+  margin-bottom: 13px;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.tocNav {
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid #e5e7eb;
+}
+
+.tocLink {
+  display: block;
+  margin-left: -2px;
+  padding: 8px 0 8px 14px;
+  border-left: 2px solid transparent;
+  color: #334155;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  text-decoration: none;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.tocLink:hover {
+  color: #2563eb;
+  border-left-color: #2563eb;
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.06), transparent);
+}
+
+.tocSubLink {
+  padding-left: 28px;
+  color: #64748b;
+  font-size: 0.87rem;
+}
+
+.container {
+  width: 100%;
+  min-width: 0;
+  max-width: 1080px;
+  margin: 0;
+  padding: 42px 52px 46px;
+  border: 1px solid #e8edf3;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 12px 38px rgba(15, 23, 42, 0.055);
+}
+
+.back {
+  display: inline-flex;
+  margin-bottom: 26px;
+  color: #64748b;
+  font-size: 0.92rem;
+  font-weight: 700;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .back:hover {
-  color: #00d4ff;
+  color: #2563eb;
 }
 
-/* Nagłówek artykułu */
+.article {
+  max-width: 900px;
+}
+
 .article h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
+  max-width: 860px;
+  margin: 0 0 12px;
+  color: #0f172a;
+  font-size: clamp(2.35rem, 4vw, 3.7rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
 }
 
-/* Informacje o autorze */
+.lead {
+  max-width: 880px;
+  margin: 0 0 20px;
+  color: #64748b;
+  font-size: clamp(1.08rem, 1.7vw, 1.32rem);
+  line-height: 1.55;
+}
+
 .author {
-  color: #888;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-  font-style: italic;
-}
-
-/* Treść posta */
-.body {
-  line-height: 1.8;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-/* Nagłówki wewnątrz treści */
-.body h1,
-.body h2,
-.body h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-/* Paragrafy */
-.body p {
-  margin-bottom: 15px;
-}
-
-/* Listy */
-.body ul,
-.body ol {
-  padding-left: 25px;
-  margin-bottom: 15px;
-}
-
-/* Inline code */
-.inlineCode {
-  background: #f5f5f5;
-  padding: 2px 5px;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 0.95rem;
-}
-
-/* Bloki kodu */
-.codeBlock {
-  position: relative;
-  margin-bottom: 25px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #f5f5f5;
-}
-
-/* Przycisk kopiowania kodu */
-.copyBtn {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  padding: 5px 10px;
-  font-size: 0.8rem;
-  background-color: #00d4ff;
-  color: #222;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  z-index: 10;
-}
-
-.copyBtn:hover {
-  background-color: #00b8e6;
-}
-
-/* Blok kodu z syntax highlighter */
-.codeBlock pre {
-  padding: 20px;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin: 0;
-  background: #f5f5f5;
-  font-size: 0.95rem;
-}
-
-/* Responsywność dla mobile */
-@media (max-width: 768px) {
-  .container {
-    padding: 20px;
-  }
-
-  .article h1 {
-    font-size: 2rem;
-  }
+  margin: 0 0 44px;
+  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .articleMeta {
@@ -128,41 +142,152 @@
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   color: #64748b;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .category,
 .relatedCategory {
   display: inline-flex;
   width: fit-content;
-  padding: 4px 9px;
+  padding: 5px 10px;
   border-radius: 999px;
   background: #eef2ff;
   color: #3730a3;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-size: 0.72rem;
+  font-size: 0.71rem;
+}
+
+.body {
+  color: #243244;
+  font-size: 1.06rem;
+  line-height: 1.82;
+}
+
+.body h1,
+.body h2,
+.body h3 {
+  color: #0f172a;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.body h2 {
+  margin: 56px 0 18px;
+  font-size: 1.85rem;
+}
+
+.body h3 {
+  margin: 38px 0 14px;
+  font-size: 1.35rem;
+}
+
+.anchorHeading {
+  scroll-margin-top: 30px;
+}
+
+.body p {
+  margin: 0 0 20px;
+}
+
+.body ul,
+.body ol {
+  margin: 0 0 24px;
+  padding-left: 26px;
+}
+
+.body li {
+  margin: 7px 0;
+}
+
+.body blockquote {
+  margin: 28px 0;
+  padding: 5px 0 5px 22px;
+  border-left: 4px solid #38bdf8;
+  color: #475569;
+}
+
+.body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 34px auto;
+  border-radius: 14px;
+}
+
+.body a {
+  color: #2563eb;
+  text-underline-offset: 3px;
+}
+
+.inlineCode {
+  padding: 2px 6px;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  background: #f8fafc;
+  color: #be123c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.92em;
+}
+
+.codeBlock {
+  position: relative;
+  margin: 28px 0 32px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.copyBtn {
+  position: absolute;
+  z-index: 10;
+  right: 10px;
+  top: 10px;
+  padding: 6px 10px;
+  border: 1px solid #dbe3ed;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #334155;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.copyBtn:hover {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.codeBlock pre {
+  margin: 0 !important;
+  padding: 22px !important;
+  overflow-x: auto;
+  background: #f8fafc !important;
+  font-size: 0.92rem !important;
 }
 
 .related {
-  margin-top: 42px;
-  padding-top: 28px;
+  margin-top: 52px;
+  padding-top: 30px;
   border-top: 1px solid #e5e7eb;
 }
 
 .relatedHeader h2 {
   margin: 4px 0 18px;
+  color: #0f172a;
   font-size: 1.65rem;
 }
 
 .relatedKicker {
-  font-size: 0.75rem;
+  color: #64748b;
+  font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.12em;
-  color: #64748b;
 }
 
 .relatedGrid {
@@ -173,15 +298,15 @@
 
 .relatedCard {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
   min-height: 150px;
   padding: 18px;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  color: #0f172a;
-  text-decoration: none;
   background: #fff;
+  color: #0f172a;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -194,11 +319,65 @@
 .relatedArrow {
   margin-top: auto;
   color: #2563eb;
-  font-weight: 700;
   font-size: 0.9rem;
+  font-weight: 700;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 980px) {
+  .page {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .container {
+    padding: 34px 32px 40px;
+  }
+}
+
+@media (max-width: 760px) {
+  .page {
+    display: block;
+  }
+
+  .toc {
+    margin-bottom: 18px;
+  }
+
+  .tocInner {
+    position: static;
+    max-height: none;
+    padding: 18px 18px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background: #fff;
+  }
+
+  .tocDivider {
+    margin: 14px 0;
+  }
+
+  .tocNav {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  .container {
+    padding: 26px 20px 32px;
+    border-radius: 14px;
+  }
+
+  .article h1 {
+    font-size: clamp(2rem, 10vw, 2.7rem);
+  }
+
+  .author {
+    margin-bottom: 34px;
+  }
+
+  .body h2 {
+    margin-top: 44px;
+  }
+
   .relatedGrid {
     grid-template-columns: 1fr;
   }

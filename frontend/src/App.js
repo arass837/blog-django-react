@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Sidebar from './components/Sidebar';
@@ -10,31 +10,40 @@ import Stats from './pages/Stats';
 import { trackSiteVisit } from './analytics';
 import styles from './App.module.css';
 
-export default function App() {
+function AppLayout() {
+  const location = useLocation();
+  const isArticle = location.pathname.startsWith('/post/');
+
   useEffect(() => {
     trackSiteVisit();
   }, []);
 
   return (
-    <Router>
-      <div className={styles.appContainer}>
-        <Header />
+    <div className={styles.appContainer}>
+      <Header />
 
-        <div className={styles.layoutWrapper}>
-          <main className={styles.mainContent}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/posts" element={<Home />} />
-              <Route path="/post/:slug" element={<PostDetail />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/stats" element={<Stats />} />
-            </Routes>
-          </main>
-          <Sidebar />
-        </div>
-
-        <Footer />
+      <div className={`${styles.layoutWrapper} ${isArticle ? styles.articleLayout : ''}`}>
+        <main className={styles.mainContent}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/posts" element={<Home />} />
+            <Route path="/post/:slug" element={<PostDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/stats" element={<Stats />} />
+          </Routes>
+        </main>
+        {!isArticle && <Sidebar />}
       </div>
+
+      <Footer />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppLayout />
     </Router>
   );
 }

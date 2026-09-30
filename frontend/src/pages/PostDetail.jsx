@@ -18,6 +18,43 @@ const formatDate = (value) => {
   }).format(new Date(value));
 };
 
+const plainText = (value) => String(value || '')
+  .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+  .replace(/[`*_~]/g, '')
+  .trim();
+
+const slugifyHeading = (value) => plainText(value)
+  .toLowerCase()
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '') || 'section';
+
+const getNodeText = (children) => {
+  if (typeof children === 'string' || typeof children === 'number') return String(children);
+  if (Array.isArray(children)) return children.map(getNodeText).join('');
+  if (children?.props?.children) return getNodeText(children.props.children);
+  return '';
+};
+
+const buildToc = (markdown = '') => {
+  const used = new Map();
+  return markdown.split('\n').reduce((items, line) => {
+    const match = line.match(/^(#{2,3})\s+(.+?)\s*#*\s*$/);
+    if (!match) return items;
+
+    const level = match[1].length;
+    const title = plainText(match[2]);
+    const base = slugifyHeading(title);
+    const count = used.get(base) || 0;
+    used.set(base, count + 1);
+    const id = count ? `${base}-${count + 1}` : base;
+
+    items.push({ level, title, id });
+    return items;
+  }, []);
+};
+
 export default function PostDetail() {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
@@ -53,6 +90,7 @@ export default function PostDetail() {
     ? (post.seo_description || makeDescription(post.content))
     : '';
 
+  const toc = useMemo(() => buildToc(post?.content || ''), [post?.content]);
   const articleSchema = useMemo(() => {
     if (!post) return null;
     const siteUrl = getSiteUrl();
@@ -86,6 +124,12 @@ export default function PostDetail() {
     });
   };
 
+  const makeHeading = (Tag) => ({ children, ...props }) => {
+    const text = getNodeText(children);
+    const id = slugifyHeading(text);
+    return <Tag id={id} className={styles.anchorHeading} {...props}>{children}</Tag>;
+  };
+
   if (error) {
     return (
       <div className={styles.container}>
@@ -101,10 +145,10 @@ export default function PostDetail() {
     );
   }
 
-  if (!post) return <p>Loading article...</p>;
+  if (!post) return <p className={styles.loading}>Loading article...</p>;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.page}>
       <Seo
         title={post.seo_title || `${post.title} | ReactoDjango`}
         description={seoDescription}
@@ -113,71 +157,98 @@ export default function PostDetail() {
         schema={articleSchema}
       />
 
-      <Link to="/" className={styles.back}>← Back</Link>
-      <article className={styles.article}>
-        <div className={styles.articleMeta}>
-          <span className={styles.category}>{post.category}</span>
-          {post.created_at && (
-            <time dateTime={post.created_at}>{formatDate(post.created_at)}</time>
-          )}
-        </div>
-
-        <h1>{post.title}</h1>
-        <p className={styles.author}>Author: {post.author_name || 'ReactoDjango Author'}</p>
-
-        <div className={styles.body}>
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              code({ node, inline, className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || '');
-                const code = String(children).replace(/\n$/, '');
-                if (inline) {
-                  return <code className={styles.inlineCode} {...props}>{children}</code>;
-                }
-                return (
-                  <div className={styles.codeBlock}>
-                    <button
-                      className={styles.copyBtn}
-                      onClick={() => copyToClipboard(code)}
-                    >
-                      Copy
-                    </button>
-                    <SyntaxHighlighter
-                      style={materialLight}
-                      language={match ? match[1] : null}
-                      PreTag="div"
-                      {...props}
-                    >
-                      {code}
-                    </SyntaxHighlighter>
-                  </div>
-                );
-              }
-            }}
-          >
-            {post.content}
-          </ReactMarkdown>
-        </div>
-      </article>
-
-      {relatedPosts.length > 0 && (
-        <aside className={styles.related} aria-labelledby="related-title">
-          <div className={styles.relatedHeader}>
-            <span className={styles.relatedKicker}>KEEP LEARNING</span>
-            <h2 id="related-title">Related articles</h2>
-          </div>
-          <div className={styles.relatedGrid}>
-            {relatedPosts.map(item => (
-              <Link key={item.slug} to={`/post/${item.slug}`} className={styles.relatedCard}>
-                <span className={styles.relatedCategory}>{item.category}</span>
-                <strong>{item.title}</strong>
-                <span className={styles.relatedArrow}>Read article →</span>
-              </Link>
-            ))}
+      {toc.length > 0 && (
+        <aside className={styles.toc} aria-label="Table of contents">
+          <div className={styles.tocInner}>
+            <Link to="/posts" className={styles.seriesLink}>ReactoDjango articles</Link>
+            <div className={styles.tocDivider} />
+            <span className={styles.tocLabel}>IN THIS ARTICLE</span>
+            <nav className={styles.tocNav}>
+              {toc.map(item => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  className={`${styles.tocLink} ${item.level === 3 ? styles.tocSubLink : ''}`}
+                >
+                  {item.title}
+                </a>
+              ))}
+            </nav>
           </div>
         </aside>
       )}
+
+      <main className={styles.container}>
+        <Link to="/posts" className={styles.back}>← All articles</Link>
+        <article className={styles.article}>
+          <div className={styles.articleMeta}>
+            <span className={styles.category}>{post.category}</span>
+            {post.created_at && (
+              <time dateTime={post.created_at}>{formatDate(post.created_at)}</time>
+            )}
+          </div>
+
+          <h1>{post.title}</h1>
+          <p className={styles.lead}>{seoDescription}</p>
+          <p className={styles.author}>By {post.author_name || 'ReactoDjango Author'}</p>
+
+          <div className={styles.body}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h2: makeHeading('h2'),
+                h3: makeHeading('h3'),
+                code({ node, inline, className, children, ...props }) {
+                  const match = /language-(\w+)/.exec(className || '');
+                  const code = String(children).replace(/\n$/, '');
+                  if (inline) {
+                    return <code className={styles.inlineCode} {...props}>{children}</code>;
+                  }
+                  return (
+                    <div className={styles.codeBlock}>
+                      <button
+                        type="button"
+                        className={styles.copyBtn}
+                        onClick={() => copyToClipboard(code)}
+                      >
+                        Copy
+                      </button>
+                      <SyntaxHighlighter
+                        style={materialLight}
+                        language={match ? match[1] : null}
+                        PreTag="div"
+                        {...props}
+                      >
+                        {code}
+                      </SyntaxHighlighter>
+                    </div>
+                  );
+                }
+              }}
+            >
+              {post.content}
+            </ReactMarkdown>
+          </div>
+        </article>
+
+        {relatedPosts.length > 0 && (
+          <aside className={styles.related} aria-labelledby="related-title">
+            <div className={styles.relatedHeader}>
+              <span className={styles.relatedKicker}>KEEP LEARNING</span>
+              <h2 id="related-title">Related articles</h2>
+            </div>
+            <div className={styles.relatedGrid}>
+              {relatedPosts.map(item => (
+                <Link key={item.slug} to={`/post/${item.slug}`} className={styles.relatedCard}>
+                  <span className={styles.relatedCategory}>{item.category}</span>
+                  <strong>{item.title}</strong>
+                  <span className={styles.relatedArrow}>Read article →</span>
+                </Link>
+              ))}
+            </div>
+          </aside>
+        )}
+      </main>
     </div>
   );
 }
