@@ -13,6 +13,8 @@
 
 .toc {
   min-width: 0;
+  align-self: stretch;
+  position: relative;
 }
 
 .tocInner {
