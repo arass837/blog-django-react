@@ -60,6 +60,8 @@ export default function PostDetail() {
   const [post, setPost] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [error, setError] = useState(false);
+  const [likeBusy, setLikeBusy] = useState(false);
+  const isLogged = Boolean(localStorage.getItem('access_token'));
 
   useEffect(() => {
     setPost(null);
@@ -117,6 +119,24 @@ export default function PostDetail() {
       },
     };
   }, [post, seoDescription]);
+
+
+  const handleLike = async () => {
+    if (!isLogged) return;
+    setLikeBusy(true);
+    try {
+      const response = await api.post(`posts/${post.slug}/like/`);
+      setPost(current => ({
+        ...current,
+        liked_by_me: response.data.liked,
+        likes_count: response.data.likes_count,
+      }));
+    } catch (likeError) {
+      console.error('Could not update like.', likeError);
+    } finally {
+      setLikeBusy(false);
+    }
+  };
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -191,6 +211,24 @@ export default function PostDetail() {
           <h1>{post.title}</h1>
           <p className={styles.lead}>{seoDescription}</p>
           <p className={styles.author}>By {post.author_name || 'ReactoDjango Author'}</p>
+
+          <div className={styles.likeRow}>
+            {isLogged ? (
+              <button
+                type="button"
+                className={`${styles.likeButton} ${post.liked_by_me ? styles.likeButtonActive : ''}`}
+                onClick={handleLike}
+                disabled={likeBusy}
+              >
+                {post.liked_by_me ? '♥ Liked' : '♡ Like'}
+              </button>
+            ) : (
+              <Link to="/login" className={styles.loginToLike}>Log in to like this post</Link>
+            )}
+            <span className={styles.likeCount}>
+              {post.likes_count || 0} {(post.likes_count || 0) === 1 ? 'like' : 'likes'}
+            </span>
+          </div>
 
           <div className={styles.body}>
             <ReactMarkdown

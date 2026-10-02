@@ -6,13 +6,27 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated, SAFE_METHODS
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import DailyVisit, Post, PostDailyView, PostVisitor, Visitor, Views
-from .serializers import PostSerializer, ViewsSerializer
+from .models import DailyVisit, Post, PostDailyView, PostVisitor, Project, Visitor, Views
+from .serializers import PostSerializer, ProjectSerializer, RegisterSerializer, ViewsSerializer
 
+
+
+
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response(
+            {'username': user.username, 'message': 'Account created successfully.'},
+            status=status.HTTP_201_CREATED,
+        )
 
 class CurrentUserView(APIView):
     """Return only the auth flags needed by the React navbar."""
@@ -29,11 +43,17 @@ class CurrentUserView(APIView):
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_permissions(self):
+        if self.action == 'toggle_like':
+            return [IsAuthenticated()]
+        if self.request.method in SAFE_METHODS:
+            return [AllowAny()]
+        return [IsAdminUser()]
     lookup_field = 'slug'
 
     def get_queryset(self):
-        qs = Post.objects.all().order_by('-created_at')
+        qs = Post.objects.select_related('author').prefetch_related('likes').order_by('-created_at')
         # Public visitors and search engines should only receive published posts.
         if not self.request.user.is_authenticated or not self.request.user.is_staff:
             qs = qs.filter(is_published=True)
@@ -41,6 +61,37 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated], url_path='like')
+    def toggle_like(self, request, slug=None):
+        post = self.get_object()
+        if post.likes.filter(pk=request.user.pk).exists():
+            post.likes.remove(request.user)
+            liked = False
+        else:
+            post.likes.add(request.user)
+            liked = True
+
+        return Response({
+            'liked': liked,
+            'likes_count': post.likes.count(),
+        })
+
+
+class ProjectViewSet(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+
+    def get_permissions(self):
+        if self.request.method in SAFE_METHODS:
+            return [AllowAny()]
+        return [IsAdminUser()]
+    lookup_field = 'slug'
+
+    def get_queryset(self):
+        qs = Project.objects.all()
+        if not self.request.user.is_authenticated or not self.request.user.is_staff:
+            qs = qs.filter(is_published=True)
+        return qs
 
 
 class ViewsViewSet(viewsets.ModelViewSet):

@@ -60,11 +60,18 @@ export default function Header() {
           <nav className={styles.nav}>
             <Link to="/" className={styles.link}>Home</Link>
             <Link to="/posts" className={styles.link}>Posts</Link>
+            <Link to="/react" className={styles.link}>React</Link>
+            <Link to="/django" className={styles.link}>Django</Link>
+            <Link to="/drf" className={styles.link}>DRF</Link>
+            <Link to="/projects" className={styles.link}>My Projects</Link>
             {isAdmin && <Link to="/stats" className={styles.link}>Statistics</Link>}
             {isLogged ? (
               <button type="button" onClick={handleLogout} className={styles.authBtn}>Log out</button>
             ) : (
-              <Link to="/login" className={styles.authBtn}>Log in</Link>
+              <>
+                <Link to="/login" className={styles.authBtn}>Log in</Link>
+                <Link to="/register" className={styles.authBtn}>Sign up</Link>
+              </>
             )}
           </nav>
         </div>

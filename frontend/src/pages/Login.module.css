@@ -40,3 +40,25 @@
 .loginForm button:hover {
     background-color: #0056b3;
 }
+
+
+.error {
+    margin: 0 0 16px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #fff1f1;
+    color: #9d1c1c;
+    font-size: 14px;
+}
+
+.switchText {
+    margin: 16px 0 0;
+    text-align: center;
+    font-size: 14px;
+}
+
+.switchText a {
+    color: #007bff;
+    font-weight: 600;
+    text-decoration: none;
+}

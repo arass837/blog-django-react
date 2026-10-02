@@ -32,6 +32,7 @@ class Post(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -116,3 +117,44 @@ class PostDailyView(models.Model):
 
     def __str__(self):
         return f"{self.post.slug} / {self.date}: {self.views}"
+
+
+class Project(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    short_description = models.CharField(max_length=300)
+    content = models.TextField(blank=True, default='')
+    technologies = models.CharField(
+        max_length=300,
+        blank=True,
+        default='',
+        help_text='Comma-separated technologies, e.g. React, Django, DRF, PostgreSQL.',
+    )
+    github_url = models.URLField(blank=True, default='')
+    live_url = models.URLField(blank=True, default='')
+    image_url = models.URLField(
+        blank=True,
+        default='',
+        help_text='Optional image URL used on the project card and detail page.',
+    )
+    is_published = models.BooleanField(default=True)
+    is_featured = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-is_featured', '-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title) or 'project'
+            slug = base_slug
+            num = 1
+            while Project.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{num}"
+                num += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title

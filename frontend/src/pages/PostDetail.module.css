@@ -384,3 +384,48 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.likeRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 26px;
+}
+
+.likeButton {
+  border: 1px solid #d8dce3;
+  background: #fff;
+  border-radius: 999px;
+  padding: 9px 15px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.likeButton:hover {
+  border-color: #111827;
+}
+
+.likeButtonActive {
+  background: #111827;
+  border-color: #111827;
+  color: #fff;
+}
+
+.likeButton:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.likeCount {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.loginToLike {
+  color: #111827;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid #111827;
+}
