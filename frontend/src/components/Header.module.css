@@ -78,6 +78,11 @@
   font-weight: 900;
 }
 
+.menuToggle,
+.mobileMenu {
+  display: none;
+}
+
 .nav {
   display: flex;
   gap: 10px;
@@ -276,18 +281,103 @@
   }
 }
 
+/* Tablet and phone navigation: replace the overcrowded row with a menu. */
+@media (max-width: 1120px) {
+  .header { overflow: visible; }
+  .container { z-index: 10; }
+  .topBar { position: relative; min-height: 76px; }
+  .nav { display: none; }
+  .menuToggle {
+    display: grid;
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 50%;
+    color: white;
+    background: #303238;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menuToggle:focus-visible, .mobileLink:focus-visible, .mobileAuthButton:focus-visible {
+    outline: 3px solid #38bdf8;
+    outline-offset: 3px;
+  }
+  .hamburger { display: grid; gap: 5px; width: 23px; }
+  .hamburger i { width: 23px; height: 2.5px; border-radius: 2px; background: white; }
+  .closeIcon { font-size: 2.2rem; font-weight: 300; line-height: 1; }
+  .mobileMenu {
+    display: block;
+    position: absolute;
+    z-index: 30;
+    left: 0;
+    right: 0;
+    top: calc(100% - 1px);
+    max-height: min(74vh, 700px);
+    overflow-y: auto;
+    padding: 18px;
+    border: 1px solid #41434a;
+    border-radius: 25px;
+    color: white;
+    background: linear-gradient(145deg, #292b30, #202126);
+    box-shadow: 0 24px 58px rgba(15,23,42,.25);
+  }
+  .mobileMenuLinks { display: grid; gap: 6px; }
+  .mobileLink {
+    display: block;
+    width: 100%;
+    padding: 15px 17px;
+    border-radius: 15px;
+    color: #f1f5f9;
+    text-decoration: none;
+    font-size: 1.08rem;
+    font-weight: 650;
+    transition: background 150ms ease;
+  }
+  .mobileLink:hover { background: #3a3d44; }
+  .mobileActive, .mobileActive:hover {
+    background: #fff;
+    color: #151820;
+  }
+  .mobileAuth {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #454750;
+  }
+  .mobileAuthButton {
+    flex: 1;
+    min-width: 110px;
+    padding: 13px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    background: #fff;
+    color: #131820;
+    font-size: 1rem;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
 @media (max-width: 560px) {
   .topBar {
     min-height: 68px;
   }
 
   .brand > span:last-child {
-    display: none;
+    display: inline;
+    font-size: clamp(.88rem, 4.3vw, 1.05rem);
   }
 
-  .link {
-    display: none;
-  }
+  .topBar { min-height: 72px; }
+  .mobileMenu { padding: 14px; border-radius: 22px; }
+
+
 
   .heroCopy h1 {
     font-size: clamp(2.55rem, 15vw, 4.2rem);

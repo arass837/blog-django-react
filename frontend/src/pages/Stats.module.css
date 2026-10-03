@@ -168,3 +168,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Keep the statistics dashboard readable on narrow screens. */
+@media (max-width: 720px) {
+  .section { min-width: 0; }
+  .headerRow h1 { font-size: clamp(1.65rem, 7vw, 2.3rem); overflow-wrap: anywhere; }
+  .tableCard { min-width: 0; padding: 14px; }
+  .tableWrap { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table { min-width: 485px; }
+  .grid { gap: 10px; }
+  .card { padding: 15px; min-width: 0; }
+  .card strong { font-size: 1.65rem; overflow-wrap: anywhere; }
+}
+@media (max-width: 480px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card:last-child { grid-column: 1 / -1; }
+  .card p { font-size: .73rem; }
+  .dateLabel { overflow-wrap: anywhere; }
+}

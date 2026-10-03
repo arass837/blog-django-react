@@ -31,3 +31,8 @@
     margin-top: 36px;
   }
 }
+
+@media (max-width: 900px) {
+  .layoutWrapper:not(.articleLayout) { display: flex; flex-direction: column; }
+  .mainContent { width: 100%; min-width: 0; }
+}

@@ -9,6 +9,20 @@ export default function Header() {
   const isLogged = Boolean(localStorage.getItem('access_token'));
   const isHome = location.pathname === '/';
   const [isAdmin, setIsAdmin] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onEscape = (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [menuOpen]);
 
   useEffect(() => {
     let active = true;
@@ -38,8 +52,19 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    setMenuOpen(false);
     navigate('/login', { replace: true });
   };
+
+  const menuItems = [
+    { to: '/', label: 'Home' },
+    { to: '/posts', label: 'Posts' },
+    { to: '/react', label: 'React' },
+    { to: '/django', label: 'Django' },
+    { to: '/drf', label: 'DRF' },
+    { to: '/projects', label: 'My Projects' },
+    ...(isAdmin ? [{ to: '/stats', label: 'Statistics' }] : []),
+  ];
 
   return (
     <header className={`${styles.header} ${!isHome ? styles.compactHeader : ''}`}>
@@ -57,14 +82,10 @@ export default function Header() {
             <span>ReactoDjango</span>
           </Link>
 
-          <nav className={styles.nav}>
-            <Link to="/" className={styles.link}>Home</Link>
-            <Link to="/posts" className={styles.link}>Posts</Link>
-            <Link to="/react" className={styles.link}>React</Link>
-            <Link to="/django" className={styles.link}>Django</Link>
-            <Link to="/drf" className={styles.link}>DRF</Link>
-            <Link to="/projects" className={styles.link}>My Projects</Link>
-            {isAdmin && <Link to="/stats" className={styles.link}>Statistics</Link>}
+          <nav className={styles.nav} aria-label="Main navigation">
+            {menuItems.map((item) => (
+              <Link key={item.to} to={item.to} className={styles.link}>{item.label}</Link>
+            ))}
             {isLogged ? (
               <button type="button" onClick={handleLogout} className={styles.authBtn}>Log out</button>
             ) : (
@@ -74,6 +95,49 @@ export default function Header() {
               </>
             )}
           </nav>
+
+          <button
+            type="button"
+            className={styles.menuToggle}
+            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {menuOpen ? (
+              <span aria-hidden="true" className={styles.closeIcon}>×</span>
+            ) : (
+              <span className={styles.hamburger} aria-hidden="true"><i /><i /><i /></span>
+            )}
+          </button>
+
+          {menuOpen && (
+            <nav id="mobile-navigation" className={styles.mobileMenu} aria-label="Mobile navigation">
+              <div className={styles.mobileMenuLinks}>
+                {menuItems.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className={`${styles.mobileLink} ${location.pathname === item.to ? styles.mobileActive : ''}`}
+                    aria-current={location.pathname === item.to ? 'page' : undefined}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+              <div className={styles.mobileAuth}>
+                {isLogged ? (
+                  <button type="button" onClick={handleLogout} className={styles.mobileAuthButton}>Log out</button>
+                ) : (
+                  <>
+                    <Link to="/login" className={styles.mobileAuthButton} onClick={() => setMenuOpen(false)}>Log in</Link>
+                    <Link to="/register" className={styles.mobileAuthButton} onClick={() => setMenuOpen(false)}>Sign up</Link>
+                  </>
+                )}
+              </div>
+            </nav>
+          )}
         </div>
 
         {isHome && (
