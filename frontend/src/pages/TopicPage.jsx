@@ -110,6 +110,15 @@ export default function TopicPage({ topic }) {
   const markdownComponents = {
     h2: makeHeadingRenderer('h2'),
     h3: makeHeadingRenderer('h3'),
+    table({ children, ...props }) {
+      return (
+        <div className={styles.tableWrapper}>
+          <table className={styles.articleTable} {...props}>
+            {children}
+          </table>
+        </div>
+      );
+    },
     code({ inline, className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || '');
       const code = String(children).replace(/\n$/, '');

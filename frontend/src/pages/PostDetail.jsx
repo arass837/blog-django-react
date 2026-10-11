@@ -236,6 +236,15 @@ export default function PostDetail() {
               components={{
                 h2: makeHeading('h2'),
                 h3: makeHeading('h3'),
+                table({ children, ...props }) {
+                  return (
+                    <div className={styles.tableWrapper}>
+                      <table className={styles.articleTable} {...props}>
+                        {children}
+                      </table>
+                    </div>
+                  );
+                },
                 code({ node, inline, className, children, ...props }) {
                   const match = /language-(\w+)/.exec(className || '');
                   const code = String(children).replace(/\n$/, '');
